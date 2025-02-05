@@ -1,0 +1,24 @@
+import time
+import requests
+from bs4 import BeautifulSoup
+
+# Налаштування
+URL = "https://booking.uz.gov.ua/"  # Офіційний сайт продажу квитків Укрзалізниці
+CHECK_INTERVAL = 300  # Інтервал перевірки (у секундах)
+
+# Функція перевірки наявності квитків
+def check_tickets():
+    response = requests.get(URL)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, "html.parser")
+        if "Квитки в наявності" in soup.text:  # Змінити відповідно до сайту
+            return True
+    return False
+
+# Основний цикл
+while True:
+    if check_tickets():
+        print("Квитки з'явилися в продажу! Перевірте: " + URL)
+        break  # Зупиняємо, якщо квитки з'явилися
+    time.sleep(CHECK_INTERVAL)
+
